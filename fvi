@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""FVI
+
+Searches through a list of files to find a string, and then sequentially opens
+each file that contains the string in vim.
+"""
+
+# Imports {{{1
+try:
+    from textwrap import fill
+    import argparse
+    import re
+    import os
+    import sys
+    from subprocess import call, Popen as popen, PIPE
+
+# Read the command line {{{1
+    prog_name = os.path.split(sys.argv[0])[1]
+    parser = argparse.ArgumentParser(
+        description=fill(' '.join([
+            "Search for files that contain a string",
+            "and then open them in vim."
+        ]))
+    )
+    arguments = parser.add_argument_group('arguments')
+    arguments.add_argument(
+        'pattern', nargs=1, default='', help="search pattern")
+    arguments.add_argument(
+        'files', nargs='+', default='', metavar='file',
+        help="a file to search")
+    parser.add_argument(
+        '-w', '--word', action='store_true', help="match a word")
+    parser.add_argument(
+        '-i', '--ignore-case', action='store_true', help="ignore case")
+    parser.add_argument(
+        '-m', '--magic', action='store_true',
+        help="treat pattern as a vim magic or grep basic regular expression")
+    parser.add_argument(
+        '-v', '--very-magic', action='store_true',
+        help="treat pattern as a vim very magic or grep extended regular expression")
+    parser.add_argument(
+        '-g', '--gvim', action='store_true',
+        help="open files in gvim")
+    cmdline = parser.parse_args()
+
+    # Initialization {{{1
+    vim_flags = ['aw', 'nofen']  # enable autowrite and disable folds in vim
+    grep_flags = ['--files-with-matches']
+    use_grep = False
+    re_flags = 0
+
+    # Process the command line {{{1
+    pattern = cmdline.pattern[0]
+    re_pattern = re.escape(pattern)
+    if cmdline.word:
+        grep_flags += ['--word-regexp']
+        vim_pattern_prefix = r'\<'
+        vim_pattern_suffix = r'\m\>'
+        re_pattern = r'\b' + pattern + r'\b'
+    else:
+        vim_pattern_prefix = ''
+        vim_pattern_suffix = ''
+    if cmdline.ignore_case:
+        grep_flags += ['--ignore-case']
+        re_flags += re.IGNORECASE
+        vim_pattern_prefix += r'\c'
+    if cmdline.very_magic:
+        use_grep = True
+        grep_flags += ['--extended-regexp']
+        vim_pattern_prefix += r'\v'
+    elif cmdline.magic:
+        use_grep = True
+        grep_flags += ['--basic-regexp']
+        vim_pattern_prefix += r'\m'
+    else:
+        vim_pattern_prefix += '\V'
+    editor = 'gvim' if cmdline.gvim else 'vim'
+
+    # Find files to edit {{{1
+    # When doing a magic search, this code filters out directories, non-readable
+    # files, and binary files.
+    # When doing a non-magic search, this code generates the actual list of
+    # files to open with vim
+    files = []
+    regex = re.compile(re_pattern, re_flags)
+    #print("PATTERN:", re_pattern)
+    for each in cmdline.files:
+        try:
+            with open(each) as f:
+                contents = f.read()
+                if use_grep or regex.search(contents, re_flags):
+                    files += [each]
+        except IOError as err:
+            print('%s: %s: %s, skipping ...' % (
+                prog_name, err.filename, err.strerror))
+        except UnicodeDecodeError:
+            print("%s: %s: is a binary file, skipping ..." % (prog_name, each))
+
+    # When doing a magic search, this code calls grep to generate the list of
+    # files to open in vim.
+    # When doing a non-magic search, this code is bypassed.
+    if use_grep:
+        cmd = ['grep'] + grep_flags + ['--regexp', pattern] + files
+        #print("### GREP:", ' '.join(cmd))
+        process = popen(cmd, stdout=PIPE)
+        stdout = process.stdout.read().decode()
+        status = process.wait()
+        process.stdout.close()
+        if status not in [0, 1]:
+            sys.exit(status)
+        files = stdout.split()
+
+    # Exit if there are no files {{{1
+    if not files:
+        sys.exit(
+            '%s: None of the files searched contain the pattern.' % (
+                prog_name,
+            )
+        )
+
+    # Edit the files {{{1
+    vim_options = 'set %s' % ' '.join(vim_flags)
+    next_file_map = 'map <C-N> :n +//<CR>'
+    search_pattern = 'silent /%s' % (vim_pattern_prefix + pattern + vim_pattern_suffix)
+    cmd = (
+        [editor]
+        + ['+%s' % '|'.join([vim_options, next_file_map, search_pattern])]
+        + files)
+    #print("### VIM:", ' '.join(cmd))
+    status = call(cmd)
+    sys.exit(status)
+
+except KeyboardInterrupt:
+    sys.exit('Killed by user')
