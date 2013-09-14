@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """FVI
 
 Searches through a list of files to find a string, and then sequentially opens
@@ -6,6 +6,7 @@ each file that contains the string in vim.
 """
 
 # Imports {{{1
+from __future__ import print_function
 try:
     from textwrap import fill
     import argparse
