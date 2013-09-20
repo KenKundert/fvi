@@ -11,4 +11,5 @@ setup(
   , author_email='theNurd@nurdletech.com'
   , download_url='git@github.com:KenKundert/fvi.git'
   , scripts=['fvi']
+  , license='GPLv3'
 )
