@@ -1,6 +1,7 @@
 *.py[co]
 .*.swp
 install.out
+fvi.1
 
 # Packages
 *.egg
