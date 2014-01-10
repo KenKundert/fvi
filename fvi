@@ -113,9 +113,12 @@ try:
                         files += [each]
             except IOError as err:
                 print('%s: %s: %s, skipping ...' % (
-                    prog_name, err.filename, err.strerror))
+                    prog_name, err.filename, err.strerror
+                ))
             except UnicodeDecodeError:
-                print("%s: %s: is a binary file, skipping ..." % (prog_name, each))
+                print("%s: %s: is a binary file, skipping ..." % (
+                    prog_name, each
+                ))
         if use_grep:
             cmd = ['grep'] + grep_flags + ['--regexp', pattern] + files
     else:
@@ -126,7 +129,9 @@ try:
             if each not in ['--basic-regexp', '--extended-regexp']
         ]
         if set(ack_flags) != set(grep_flags):
-            print("%s: ack does not support the magic flags, ignored." % prog_name)
+            print("%s: ack does not support the magic flags, ignored." % (
+                prog_name
+            ))
         cmd = ['ack'] + ack_flags + [pattern]
 
     # Run either grep to filter out any files that do not contain the search
@@ -146,22 +151,25 @@ try:
 
     # Exit if there are no files {{{1
     if not files:
-        sys.exit(
-            '%s: None of the files searched contain the pattern.' % (
-                prog_name,
-            )
-        )
+        sys.exit('%s: None of the files searched contain the pattern.' % (
+            prog_name,
+        ))
 
     # Edit the files {{{1
     vim_options = 'set %s' % ' '.join(vim_flags)
     next_file_map = 'map <C-N> :n +//<CR>'
-    search_pattern = 'silent /%s' % (vim_pattern_prefix + pattern + vim_pattern_suffix)
+    search_pattern = 'silent /%s' % (
+        vim_pattern_prefix + pattern + vim_pattern_suffix
+    )
     cmd = (
         [editor]
         + ['+%s' % '|'.join([vim_options, next_file_map, search_pattern])]
-        + files)
+        + files
+    )
     status = call(cmd)
     sys.exit(status)
 
 except KeyboardInterrupt:
     sys.exit('Killed by user')
+
+# vim: set sw=4 sts=4 et:

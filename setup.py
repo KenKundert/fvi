@@ -6,18 +6,20 @@ import manpage
 manpage.write()
 
 setup(
-    name='fvi'
-  , description=dedent("""\
+    name='fvi',
+    description=dedent("""\
         Search for a pattern in a collection of files and edit the files that
         contain the pattern.
-    """)
-  , author="Ken Kundert"
-  , author_email='theNurd@nurdletech.com'
-  , version=manpage.version
-  , download_url='git@github.com:KenKundert/fvi.git'
-  , scripts=['fvi']
-  , data_files=[
+    """),
+    author="Ken Kundert",
+    author_email='theNurd@nurdletech.com',
+    version=manpage.version,
+    download_url='git@github.com:KenKundert/fvi.git',
+    scripts=['fvi'],
+    data_files=[
         ('man/man1', ['fvi.1']),
-    ]
-  , license='GPLv3'
+    ],
+    license='GPLv3'
 )
+
+# vim: set sw=4 sts=4 et:

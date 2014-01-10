@@ -222,10 +222,7 @@ programManpage = {
 # Generate restructured text {{{1
 def write(genRST=False):
     for each in [programManpage]:
-        rst = dedent(each['contents'][1:-1]).format(
-            date=date
-          , version=version
-        )
+        rst = dedent(each['contents'][1:-1]).format(date=date, version=version)
 
         # generate reStructuredText file (only used for debugging)
         if genRST:
