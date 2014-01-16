@@ -5,24 +5,23 @@ Vim paired with grep.
 
 Given a pattern and a list of files, **fvi** first runs *grep* on the given 
 files to find which contain the pattern, and then opens only those files in 
-*vim*. Use *N* to move to next occurrence of pattern and *Ctrl-N* to move to 
-next file. *vim* is run with *autowrite* set. Any directories, unreadable files, 
-or binary files in the file list are ignored.
+*vim*. Within *vim* use *n* to move to next occurrence of pattern and *Ctrl-n* 
+to move to next file. *vim* is run with *autowrite* set. Any directories, 
+unreadable files, or binary files in the file list are ignored.
 
 If no file list is given on the command line, **fvi** then uses *ack* rather 
 than *grep* to find which files contain the pattern. Generally *ack* will look 
 at all regular files in the current working directory and all subdirectories, 
 however this can be controlled using .ackrc files.
 
-Install on Unix systems by running ./install.  Requires Python 2.6 or later or 
-Python 3.2 or later.
-
 Arguments
 ---------
+
 ``fvi`` [options] *pattern* [*file* [ *file* ... ]]
 
 Options
 -------
+
 -h, --help         Show this help message and exit.
 -w, --word         Match a word.
 -i, --ignore-case  Ignore case.
@@ -31,3 +30,20 @@ Options
 -v, --very-magic   Treat pattern as a vim very magic or grep extended
                    regular expression.
 -g, --gvim         Open files in gvim.
+
+Installation
+------------
+
+Runs only on Unix systems.  Requires Python 2.6 or later or Python 3.2 or later. 
+It also requires Python's docutils. On Redhat systems you can get them using::
+
+    sudo yum install python3 python3-docutils
+
+On Arch Linux, use::
+
+    sudo pacman -S python python-docutils
+
+Install by running ./install. Installs both the program an its manpage. Once 
+installed, you can get more information using::
+
+   man fvi
