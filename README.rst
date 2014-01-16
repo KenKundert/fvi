@@ -34,14 +34,15 @@ Options
 Installation
 ------------
 
-Runs only on Unix systems.  Requires Python 2.6 or later or Python 3.2 or later. 
-It also requires Python's docutils. On Redhat systems you can get them using::
+Runs only on Unix systems.  Requires Python 2.6 or later or Python 3.2 or later.  
+It also requires Python's docutils. Also uses ack if available. On Redhat 
+systems you can get them using::
 
-    sudo yum install python3 python3-docutils
+    sudo yum install python3 python3-docutils ack
 
 On Arch Linux, use::
 
-    sudo pacman -S python python-docutils
+    sudo pacman -S python python-docutils ack
 
 Install by running ./install. Installs both the program an its manpage. Once 
 installed, you can get more information using::
