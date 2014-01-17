@@ -38,15 +38,15 @@ Runs only on Unix systems.  Requires Python 2.6 or later or Python 3.2 or later.
 It also requires Python's docutils. Also uses ack if available. On Redhat 
 systems you can get them using::
 
-    sudo yum install python3 python3-docutils ack
+    sudo yum install python3 python3-setuptools python3-docutils ack
 
 On Arch Linux, use::
 
-    sudo pacman -S python python-docutils ack
+    sudo pacman -S python python-setuptools python-docutils ack
 
 On Ubuntu or other Debian systems, use::
 
-    sudo apt-get install python3 python3-docutils ack-grep
+    sudo apt-get install python3 python3-setuptools python3-docutils ack-grep
 
 On Ubuntu, *ack* is installed with a non-standard name. You will need to modify 
 the *fvi* file and replace ``ack`` with ``ack-grep`` to address this issue.
