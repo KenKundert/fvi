@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Installs fvi
 #
 # Requires 2.7 or Python3.3. Also requires the following packages
@@ -22,7 +22,7 @@ rm -rf build dist $cmd.egg-info install.out
 
 # install $cmd
 python$vers setup.py install --quiet --user >& install.out
-if [ $? != 0 ] ; then
+if [[ $? -ne 0 ]] ; then
     echo "Problems found, aborting (see install.out)"
     exit 1
 fi
