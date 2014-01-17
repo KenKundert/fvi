@@ -49,7 +49,7 @@ On Ubuntu or other Debian systems, use::
     sudo apt-get install python3 python3-docutils ack-grep
 
 On Ubuntu, *ack* is installed with a non-standard name. You will need to modify 
-the *fvi* file and replace ``ack`` with `ack-grep`` to address this issue.
+the *fvi* file and replace ``ack`` with ``ack-grep`` to address this issue.
 
 Install by running ./install. Installs both the program an its manpage. Once 
 installed, you can get more information using::
