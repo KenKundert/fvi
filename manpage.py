@@ -1,4 +1,4 @@
-#!/bin/env python 
+#!/usr/bin/env python
 # FVI Documentation
 #
 # Converts a restructured text version of the manpages to nroff.
