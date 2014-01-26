@@ -51,6 +51,23 @@ programManpage = {
         ========
         **fvi** [*options*] pattern [*files*]
 
+        OPTIONS
+        =======
+
+        Usage::
+
+            fvi [-h] [-w] [-i] [-m] [-v] [-g] pattern [file [file ...]]
+
+        -h, --help          show help message and exit
+        -w, --word          match a word
+        -i, --ignore-case   ignore case
+        -m, --magic         treat a pattern as a vim magic or grep basic regular 
+                            expression
+        -v, --very-magic    treat a pattern as a vim very magic or grep extended 
+                            regular expression
+
+        -g, --gvim          open files in gvim rather than vim
+
         DESCRIPTION
         ===========
         **fvi** searches for files that contain a pattern and then open them in 
@@ -195,23 +212,6 @@ programManpage = {
         trouble finding the pattern. At this point you should simply type ``/`` 
         and then re-enter the search pattern, but this time in a *vim* 
         compatible manner.
-
-        OPTIONS
-        =======
-
-        Usage::
-
-            fvi [-h] [-w] [-i] [-m] [-v] [-g] pattern [file [file ...]]
-
-        -h, --help          show help message and exit
-        -w, --word          match a word
-        -i, --ignore-case   ignore case
-        -m, --magic         treat a pattern as a vim magic or grep basic regular 
-                            expression
-        -v, --very-magic    treat a pattern as a vim very magic or grep extended 
-                            regular expression
-
-        -g, --gvim          open files in gvim rather than vim
 
         SEE ALSO
         ========
