@@ -2,7 +2,7 @@
 # Installs fvi
 #
 # Requires 2.7 or Python3.3. Also requires the following packages
-#     # yum install python python-docutils ack
+#     # yum install python python-docutils python-docopt ack
 # Be sure to add ~/.local/bin into your path.
 cmd=fvi
 
