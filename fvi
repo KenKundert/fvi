@@ -31,6 +31,22 @@ try:
     import sys
     from subprocess import call, Popen as popen, PIPE
 
+    # Eliminate duplicate files {{{1
+    def eliminateDuplicateFiles(files):
+        seen = set()
+        todo = []
+        ignore = []
+        for fn in files:
+            nfo = os.stat(fn)
+            if nfo.st_ino in seen:
+                ignore.append(fn)
+            else:
+                seen.add(nfo.st_ino)
+                todo.append(fn)
+        if ignore:
+            print('Ignoring duplicate files:\n    %s' %  '\n    '.join(ignore))
+        return todo
+
 # Read the command line {{{1
     prog_name = os.path.split(sys.argv[0])[1]
     parser = argparse.ArgumentParser(
@@ -156,6 +172,7 @@ try:
         ))
 
     # Edit the files {{{1
+    files = eliminateDuplicateFiles(files)
     vim_options = 'set %s' % ' '.join(vim_flags)
     next_file_map = 'map <C-N> :n +//<CR>'
     search_pattern = 'silent /%s' % (
