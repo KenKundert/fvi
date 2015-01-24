@@ -27,6 +27,7 @@ try:
     from textwrap import fill
     import argparse
     import re
+    import codecs
     import os
     import sys
     from subprocess import call, Popen as popen, PIPE
@@ -74,6 +75,9 @@ try:
     parser.add_argument(
         '-g', '--gvim', action='store_true',
         help="open files in gvim rather than vim")
+    parser.add_argument(
+        '-b', '--binary', action='store_true',
+        help="do not skip binary files or those not cannot be decode as utf-8")
     cmdline = parser.parse_args()
 
     # Initialization {{{1
@@ -123,7 +127,8 @@ try:
         regex = re.compile(re_pattern, re_flags)
         for each in cmdline.files:
             try:
-                with open(each) as f:
+                eh = 'ignore' if cmdline.binary else 'strict'
+                with codecs.open(each, 'r', 'utf-8', eh) as f:
                     contents = f.read()
                     if use_grep or regex.search(contents, re_flags):
                         files += [each]
@@ -131,10 +136,13 @@ try:
                 print('%s: %s: %s, skipping ...' % (
                     prog_name, err.filename, err.strerror
                 ))
-            except UnicodeDecodeError:
+            except UnicodeDecodeError as err:
                 print("%s: %s: is a binary file, skipping ..." % (
                     prog_name, each
                 ))
+                print(str(err))
+                print('    ', err.object[err.start-25:err.end+25])
+                print('    ', 27*' ' + (err.end-err.start)*'^')
         if use_grep:
             cmd = ['grep'] + grep_flags + ['--regexp', pattern] + files
     else:
