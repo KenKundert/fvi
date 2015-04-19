@@ -182,7 +182,10 @@ try:
     # Edit the files {{{1
     files = eliminateDuplicateFiles(files)
     vim_options = 'set %s' % ' '.join(vim_flags)
-    next_file_map = 'map <C-N> :n +//<CR>'
+    # Configure ctrl-N to move to first occurrence of search string in next file   
+    # while suppressing the annoying 'press enter' message and echoing the
+    # name of the new file so you know where you are.
+    next_file_map = 'map <C-N> :silent next +//<CR> :file<CR>'
     search_pattern = 'silent /%s' % (
         vim_pattern_prefix + pattern + vim_pattern_suffix
     )
