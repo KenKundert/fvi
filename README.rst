@@ -1,7 +1,5 @@
-FVI
-===
-
-Vim paired with grep.
+FVI -- Vim paired with Grep
+===========================
 
 Given a pattern and a list of files, **fvi** first runs *grep* on the given 
 files to find which contain the pattern, and then opens only those files in 
