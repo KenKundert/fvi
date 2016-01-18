@@ -2,6 +2,7 @@
 .*.swp
 install.out
 fvi.1
+fvi.1.rst
 
 # Packages
 *.egg

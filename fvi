@@ -17,6 +17,7 @@ Options:
     -v, --very-magic    treat a pattern as a vim very magic or grep extended 
                         regular expression
     -g, --gvim          open files in gvim rather than vim
+    -b, --binary        do not skip binary files or those not cannot be decode as utf-8
     -h, --help          show help message and exit
 """
 __version__ = '1.1.1'
@@ -111,15 +112,15 @@ try:
         # used to filter out files that do not contain the search pattern.
         files = []
         regex = re.compile(re_pattern, re_flags)
-        for each in cmdline['<files>']:
+        for each in cmdline['<file>']:
             try:
-                eh = 'ignore' if cmdline.binary else 'strict'
+                eh = 'ignore' if cmdline['--binary'] else 'strict'
                 with codecs.open(each, 'r', 'utf-8', eh) as f:
                     contents = f.read()
                     if use_grep or regex.search(contents, re_flags):
                         files += [each]
             except OSError as err:
-                warn(os_error(err), 'skipping ...')
+                warn(os_error(err), 'Skipping ...')
             except UnicodeDecodeError as err:
                 warn("is a binary file, skipping ...", culprit=each)
                 codicil(str(err))
@@ -150,6 +151,7 @@ try:
     # Exit if there are no files {{{1
     if not files:
         display('None of the files searched contain the pattern.')
+        terminate()
 
     # Edit the files {{{1
     files = eliminateDuplicateFiles(files)
