@@ -19,7 +19,7 @@ Options:
     -g, --gvim          open files in gvim rather than vim
     -h, --help          show help message and exit
 """
-__version__ = '1.1'
+__version__ = '1.1.0'
 
 # License {{{1
 # Copyright (C) 2013-16 Kenneth S. Kundert
