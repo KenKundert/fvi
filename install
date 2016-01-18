@@ -1,13 +1,21 @@
 #!/bin/bash
 # Installs fvi
 #
-# Requires 2.7 or Python3.3. Also requires the following packages
-#     # yum install python python-docutils python-docopt ack
-# Be sure to add ~/.local/bin into your path.
+# Requires Python3.5.
+#
+# This install script installs into ~/.local. It also installs the manpage into 
+# ~/.local/man.  This is done with the hack below because setuptools can no 
+# longer install manpages.  Be sure to add ~/.local/bin into your path.
+#
+# Rather than installing with this script, you can also install using:
+#    pip3 install fvi
+# but in this case you need to copy the man page manually. If you install into 
+# ../bin/fvi, then you should put the man page to ../man/man1/fvi.1.
+
 cmd=fvi
 
 # Set python to the version of python you wish to use (ex. python2 or python3)
-python=python
+python=python3
 
 # run pylint to find egregious errors
 # this is optional, you can delete this line if you don't have pylint

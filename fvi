@@ -1,12 +1,29 @@
 #!/usr/bin/env python
-# FVI
-#
-# Searches through a list of files to find a string, and then sequentially opens
-# each file that contains the string in vim.
-#
-# Copyright (C) 2013-14 Kenneth S. Kundert
+
+"""
+fvi
+
+Searches through a list of files to find a string, and then sequentially opens
+each file that contains that string in vim.
+
+Usage:
+    fvi [options] <pattern> [<file>...]
+
+Options:
+    -w, --word          match a word
+    -i, --ignore-case   ignore case
+    -m, --magic         treat a pattern as a vim magic or grep basic regular 
+                        expression
+    -v, --very-magic    treat a pattern as a vim very magic or grep extended 
+                        regular expression
+    -g, --gvim          open files in gvim rather than vim
+    -h, --help          show help message and exit
+"""
+__version__ = '1.1'
 
 # License {{{1
+# Copyright (C) 2013-16 Kenneth S. Kundert
+#
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or (at your option) any later
@@ -22,15 +39,13 @@
 
 
 # Imports {{{1
-from __future__ import print_function, division
 try:
-    from textwrap import fill
-    import argparse
+    from docopt import docopt
+    from inform import Inform, codicil, display, fatal, os_error, terminate, warn
+    from shlib import Run
     import re
     import codecs
     import os
-    import sys
-    from subprocess import call, Popen as popen, PIPE
 
     # Eliminate duplicate files {{{1
     def eliminateDuplicateFiles(files):
@@ -45,40 +60,11 @@ try:
                 seen.add(nfo.st_ino)
                 todo.append(fn)
         if ignore:
-            print('Ignoring duplicate files:\n    %s' %  '\n    '.join(ignore))
+            display('Ignoring duplicate files:\n    %s' %  '\n    '.join(ignore))
         return todo
 
 # Read the command line {{{1
-    prog_name = os.path.split(sys.argv[0])[1]
-    parser = argparse.ArgumentParser(
-        description=fill(' '.join([
-            "Search for files that contain a string",
-            "and then open them in vim."
-        ]))
-    )
-    arguments = parser.add_argument_group('arguments')
-    arguments.add_argument(
-        'pattern', nargs=1, default='', help="search pattern")
-    arguments.add_argument(
-        'files', nargs='*', default='', metavar='file',
-        help="a file to search")
-    parser.add_argument(
-        '-w', '--word', action='store_true', help="match a word")
-    parser.add_argument(
-        '-i', '--ignore-case', action='store_true', help="ignore case")
-    parser.add_argument(
-        '-m', '--magic', action='store_true',
-        help="treat pattern as a vim magic or grep basic regular expression")
-    parser.add_argument(
-        '-v', '--very-magic', action='store_true',
-        help="treat pattern as a vim very magic or grep extended regular expression")
-    parser.add_argument(
-        '-g', '--gvim', action='store_true',
-        help="open files in gvim rather than vim")
-    parser.add_argument(
-        '-b', '--binary', action='store_true',
-        help="do not skip binary files or those not cannot be decode as utf-8")
-    cmdline = parser.parse_args()
+    cmdline = docopt(__doc__)
 
     # Initialization {{{1
     vim_flags = ['aw', 'nofen']  # enable autowrite and disable folds in vim
@@ -88,9 +74,9 @@ try:
     cmd = None
 
     # Process the command line {{{1
-    pattern = cmdline.pattern[0]
+    pattern = cmdline['<pattern>']
     re_pattern = re.escape(pattern)
-    if cmdline.word:
+    if cmdline['--word']:
         grep_flags += ['--word-regexp']
         vim_pattern_prefix = r'\<'
         vim_pattern_suffix = r'\m\>'
@@ -98,24 +84,24 @@ try:
     else:
         vim_pattern_prefix = ''
         vim_pattern_suffix = ''
-    if cmdline.ignore_case:
+    if cmdline['--ignore-case']:
         grep_flags += ['--ignore-case']
         re_flags += re.IGNORECASE
         vim_pattern_prefix += r'\c'
-    if cmdline.very_magic:
+    if cmdline['--very-magic']:
         use_grep = True
         grep_flags += ['--extended-regexp']
         vim_pattern_prefix += r'\v'
-    elif cmdline.magic:
+    elif cmdline['--magic']:
         use_grep = True
         grep_flags += ['--basic-regexp']
         vim_pattern_prefix += r'\m'
     else:
         vim_pattern_prefix += '\V'
-    editor = 'gvim' if cmdline.gvim else 'vim'
+    editor = 'gvim' if cmdline['--gvim'] else 'vim'
 
     # Find files to edit {{{1
-    if cmdline.files:
+    if cmdline['<file>']:
         # User has given a list of files.
         # Try to open each and eliminate if it is undesirable (is a directory,
         # is unreadable, or is a binary file).
@@ -125,24 +111,20 @@ try:
         # used to filter out files that do not contain the search pattern.
         files = []
         regex = re.compile(re_pattern, re_flags)
-        for each in cmdline.files:
+        for each in cmdline['<files>']:
             try:
                 eh = 'ignore' if cmdline.binary else 'strict'
                 with codecs.open(each, 'r', 'utf-8', eh) as f:
                     contents = f.read()
                     if use_grep or regex.search(contents, re_flags):
                         files += [each]
-            except IOError as err:
-                print('%s: %s: %s, skipping ...' % (
-                    prog_name, err.filename, err.strerror
-                ))
+            except OSError as err:
+                warn(os_error(err), 'skipping ...')
             except UnicodeDecodeError as err:
-                print("%s: %s: is a binary file, skipping ..." % (
-                    prog_name, each
-                ))
-                print(str(err))
-                print('    ', err.object[err.start-25:err.end+25])
-                print('    ', 27*' ' + (err.end-err.start)*'^')
+                warn("is a binary file, skipping ...", culprit=each)
+                codicil(str(err))
+                codicil('    ', err.object[err.start-25:err.end+25])
+                codicil('    ', 27*' ' + (err.end-err.start)*'^')
         if use_grep:
             cmd = ['grep'] + grep_flags + ['--regexp', pattern] + files
     else:
@@ -153,31 +135,21 @@ try:
             if each not in ['--basic-regexp', '--extended-regexp']
         ]
         if set(ack_flags) != set(grep_flags):
-            print("%s: ack does not support the magic flags, ignored." % (
-                prog_name
-            ))
-        cmd = ['ack'] + ack_flags + [pattern]
+            warn("ack does not support the magic flags, ignored.")
+        cmd = ['ack', '--follow'] + ack_flags + [pattern]
 
     # Run either grep to filter out any files that do not contain the search
     # pattern or ack to find any files that contain the pattern.
     if cmd:
         try:
-            process = popen(cmd, stdout=PIPE)
-            stdout = process.stdout.read().decode()
-            status = process.wait()
-            process.stdout.close()
-            if status not in [0, 1]:
-                sys.exit(status)
-            files = stdout.split()
-        except (IOError, OSError) as err:
-            where = err.filename if err.filename else ' '.join(cmd)
-            sys.exit('%s: %s: %s.' % (prog_name, where, err.strerror))
+            process = Run(cmd, modes='sOeW1')
+            files = process.stdout.split()
+        except OSError as err:
+            fatal(os_error(err))
 
     # Exit if there are no files {{{1
     if not files:
-        sys.exit('%s: None of the files searched contain the pattern.' % (
-            prog_name,
-        ))
+        display('None of the files searched contain the pattern.')
 
     # Edit the files {{{1
     files = eliminateDuplicateFiles(files)
@@ -194,10 +166,10 @@ try:
         + ['+%s' % '|'.join([vim_options, next_file_map, search_pattern])]
         + files
     )
-    status = call(cmd)
-    sys.exit(status)
+    vim = Run(cmd, modes='soeW')
+    terminate(vim.status)
 
 except KeyboardInterrupt:
-    sys.exit('Killed by user')
+    terminate('Killed by user')
 
 # vim: set sw=4 sts=4 et:

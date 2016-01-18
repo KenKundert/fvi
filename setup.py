@@ -1,25 +1,51 @@
 from setuptools import setup
-from textwrap import dedent
 
 # Create/update manpage before installing
-import manpage
-manpage.write()
+message = ''
+try:
+    import manpage
+    manpage.write()
+except ImportError:
+    with open('fvi.1', 'w') as f:
+        f.write('')
+    message='\nRerun setup in order to generate the manpage.'
+
+with open('README.rst') as f:
+    readme = f.read()
 
 setup(
     name='fvi',
-    description=dedent("""\
-        Search for a pattern in a collection of files and edit the files that
-        contain the pattern.
-    """),
+    version='1.1',
+    description="Search for a pattern in a set of files and edit the files that contain the pattern.",
     author="Ken Kundert",
-    author_email='theNurd@nurdletech.com',
-    version=manpage.version,
+    author_email='fvi@nurdletech.com',
     download_url='git@github.com:KenKundert/fvi.git',
     scripts=['fvi'],
     data_files=[
         ('man/man1', ['fvi.1']),
     ],
-    license='GPLv3'
+    license='GPLv3+',
+    install_requires=[
+        'docopt',
+        'docutils',
+        'inform',
+        'shlib',
+    ],
+    keywords=[
+        'vim',
+        'grep',
+    ],
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: End Users/Desktop',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'Natural Language :: English',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Utilities',
+    ],
 )
 
+print(message)
 # vim: set sw=4 sts=4 et:
