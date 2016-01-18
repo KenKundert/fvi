@@ -9,8 +9,8 @@
 #
 # Rather than installing with this script, you can also install using:
 #    pip3 install fvi
-# but in this case you need to copy the man page manually. If you install into 
-# ../bin/fvi, then you should put the man page to ../man/man1/fvi.1.
+# but in this case you may need to copy the man page manually. If you install 
+# into ../bin/fvi, then you should put the man page to ../man/man1/fvi.1.
 
 cmd=fvi
 
@@ -29,6 +29,7 @@ echo "Installing $cmd to ~/.home/bin (Python$vers)."
 rm -rf build dist $cmd.egg-info install.out
 
 # install $cmd
+./manpage.py
 python$vers setup.py install --quiet --user >& install.out
 if [[ $? -ne 0 ]] ; then
     echo "Problems found, aborting (see install.out)"

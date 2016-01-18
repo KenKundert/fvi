@@ -54,12 +54,16 @@ try:
         todo = []
         ignore = []
         for fn in files:
-            nfo = os.stat(fn)
-            if nfo.st_ino in seen:
+            try:
+                nfo = os.stat(fn)
+                if nfo.st_ino in seen:
+                    ignore.append(fn)
+                else:
+                    seen.add(nfo.st_ino)
+                    todo.append(fn)
+            except OSError as err:
+                warn(os_error(err), 'Skipping ...')
                 ignore.append(fn)
-            else:
-                seen.add(nfo.st_ino)
-                todo.append(fn)
         if ignore:
             display('Ignoring duplicate files:\n    %s' %  '\n    '.join(ignore))
         return todo
@@ -124,8 +128,9 @@ try:
             except UnicodeDecodeError as err:
                 warn("is a binary file, skipping ...", culprit=each)
                 codicil(str(err))
-                codicil('    ', err.object[err.start-25:err.end+25])
-                codicil('    ', 27*' ' + (err.end-err.start)*'^')
+                begin = max(err.start-25, 0)
+                codicil('    ', err.object[begin:err.end+25])
+                codicil('    ', (2+err.start-begin)*' ' + (err.end-err.start)*'^')
         if use_grep:
             cmd = ['grep'] + grep_flags + ['--regexp', pattern] + files
     else:
@@ -144,7 +149,7 @@ try:
     if cmd:
         try:
             process = Run(cmd, modes='sOeW1')
-            files = process.stdout.split()
+            files = process.stdout.strip().split('\n')
         except OSError as err:
             fatal(os_error(err))
 
@@ -172,6 +177,7 @@ try:
     terminate(vim.status)
 
 except KeyboardInterrupt:
-    terminate('Killed by user')
+    display('Killed by user.')
+    terminate(0)
 
 # vim: set sw=4 sts=4 et:
