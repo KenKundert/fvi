@@ -6,6 +6,9 @@ try:
     import manpage
     manpage.write()
 except ImportError:
+    # this will let the setup script run, allowing prerequisites to be 
+    # installed, but then setup script must be run again so manpage is 
+    # generated.
     with open('fvi.1', 'w') as f:
         f.write('')
     message='\nRerun setup in order to generate the manpage.'
