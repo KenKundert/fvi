@@ -18,7 +18,7 @@ with open('README.rst') as f:
 
 setup(
     name='fvi',
-    version='1.1.3',
+    version='1.1.4',
     description="Search for a pattern in a set of files and edit the files that contain the pattern.",
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
