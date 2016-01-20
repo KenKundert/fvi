@@ -42,7 +42,9 @@ __version__ = '1.1.3'
 # Imports {{{1
 try:
     from docopt import docopt
-    from inform import Inform, codicil, display, fatal, os_error, terminate, warn
+    from inform import (
+        Inform, codicil, cull, display, fatal, os_error, terminate, warn
+    )
     from shlib import Run
     import re
     import codecs
@@ -150,11 +152,12 @@ try:
         try:
             process = Run(cmd, modes='sOeW1')
             files = process.stdout.strip().split('\n')
+
         except OSError as err:
             fatal(os_error(err))
 
     # Exit if there are no files {{{1
-    if not files:
+    if not cull(files, ''):
         display('None of the files searched contain the pattern.')
         terminate()
 
