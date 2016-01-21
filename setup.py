@@ -1,20 +1,15 @@
-from setuptools import setup
+from distutils.core import setup
+    # must use distutils rather than the newer setuptools because setuptools 
+    # will not place the manpage where it belongs
 
 # Create/update manpage before installing
-message = ''
 try:
     import manpage
     manpage.write()
 except ImportError:
-    # this will let the setup script run, allowing prerequisites to be 
-    # installed, but then setup script must be run again so manpage is 
-    # generated.
-    with open('fvi.1', 'w') as f:
-        f.write('')
-    message='\nRerun setup in order to generate the manpage.'
-
-with open('README.rst') as f:
-    readme = f.read()
+    # distutils is not installed yet, so just use the existing version of the 
+    # manpage rather than try to recreate/update it.
+    pass
 
 setup(
     name='fvi',
@@ -25,10 +20,10 @@ setup(
     download_url='git@github.com:KenKundert/fvi.git',
     scripts=['fvi'],
     data_files=[
-        ('man/man1', ['fvi.1']),
+        ('man/man1', ['fvi.1'])
     ],
     license='GPLv3+',
-    install_requires=[
+    requires=[
         'docopt',
         'docutils',
         'inform',
@@ -49,6 +44,4 @@ setup(
         'Topic :: Utilities',
     ],
 )
-
-print(message)
 # vim: set sw=4 sts=4 et:

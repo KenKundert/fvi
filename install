@@ -4,13 +4,10 @@
 # Requires Python3.5.
 #
 # This install script installs into ~/.local. It also installs the manpage into 
-# ~/.local/man.  This is done with the hack below because setuptools can no 
-# longer install manpages.  Be sure to add ~/.local/bin into your path.
+# ~/.local/man.
 #
 # Rather than installing with this script, you can also install using:
 #    pip3 install fvi
-# but in this case you may need to copy the man page manually. If you install 
-# into ../bin/fvi, then you should put the man page to ../man/man1/fvi.1.
 
 cmd=fvi
 
@@ -35,14 +32,6 @@ if [[ $? -ne 0 ]] ; then
     echo "Problems found, aborting (see install.out)"
     exit 1
 fi
-
-# setuptools no longer installs man pages properly, so I must fix things up
-for sect in 1
-do
-    mkdir -p ~/.local/man/man$sect
-    rm -f ~/.local/man/man$sect/$cmd.$sect
-    ln -s ~/.local/lib/python$vers/site-packages/$cmd-*.egg/man/man$sect/$cmd.$sect ~/.local/man/man$sect
-done
 
 # remove build directories, because I like a clean directory
 rm -rf build dist $cmd.egg-info
