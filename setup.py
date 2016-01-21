@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='fvi',
-    version='1.1.4',
+    version='1.1.5',
     description="Search for a pattern in a set of files and edit the files that contain the pattern.",
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
