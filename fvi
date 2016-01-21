@@ -19,6 +19,12 @@ Options:
     -g, --gvim          open files in gvim rather than vim
     -b, --binary        do not skip binary files or those not cannot be decode as utf-8
     -h, --help          show help message and exit
+
+Vim will open the first file that contains the pattern and place the cursor on
+the first occurrence. Use n to go to the next occurrence and ctrl-n to go to the
+next file. Autowrite is set by default, so any changes you make are
+automatically written out before moving to the next file. Run 'man fvi' for more
+information.
 """
 __version__ = '1.1.5'
 
