@@ -26,7 +26,7 @@ next file. Autowrite is set by default, so any changes you make are
 automatically written out before moving to the next file. Run 'man fvi' for more
 information.
 """
-__version__ = '1.1.5'
+__version__ = '1.1.6'
 
 # License {{{1
 # Copyright (C) 2013-16 Kenneth S. Kundert
