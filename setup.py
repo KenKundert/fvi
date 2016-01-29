@@ -17,7 +17,8 @@ setup(
     description="Search for a pattern in a set of files and edit the files that contain the pattern.",
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
-    download_url='git@github.com:KenKundert/fvi.git',
+    url='http://nurdletech.com/linux-utilities/fvi',
+    download_url='https://github.com/kenkundert/fvi/tarball/master')',
     scripts=['fvi'],
     data_files=[
         ('man/man1', ['fvi.1'])
