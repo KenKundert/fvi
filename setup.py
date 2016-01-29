@@ -14,11 +14,11 @@ except ImportError:
 setup(
     name='fvi',
     version='1.1.6',
-    description="Search for a pattern in a set of files and edit the files that contain the pattern.",
+    description="Combines grep/ack with vim to quickly find and edit files that contain a pattern",
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
     url='http://nurdletech.com/linux-utilities/fvi',
-    download_url='https://github.com/kenkundert/fvi/tarball/master')',
+    download_url='https://github.com/kenkundert/fvi/tarball/master',
     scripts=['fvi'],
     data_files=[
         ('man/man1', ['fvi.1'])
@@ -27,7 +27,7 @@ setup(
     requires=[
         'docopt',
         'docutils',
-        'inform',
+        'inform>=1.2',
         'shlib',
     ],
     keywords=[

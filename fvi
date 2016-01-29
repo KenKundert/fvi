@@ -163,7 +163,7 @@ try:
             fatal(os_error(err))
 
     # Exit if there are no files {{{1
-    if not cull(files, ''):
+    if not cull(files):
         display('None of the files searched contain the pattern.')
         terminate()
 
@@ -182,11 +182,13 @@ try:
         + ['+%s' % '|'.join([vim_options, next_file_map, search_pattern])]
         + files
     )
-    vim = Run(cmd, modes='soeW')
+    vim = Run(cmd, modes='soeW*')
     terminate(vim.status)
 
 except KeyboardInterrupt:
     display('Killed by user.')
     terminate(0)
+except OSError as err:
+    fatal(os_error(err))
 
 # vim: set sw=4 sts=4 et:
