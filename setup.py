@@ -27,7 +27,7 @@ setup(
     requires=[
         'docopt',
         'docutils',
-        'inform>=1.2',
+        'inform (>=1.2)',
         'shlib',
     ],
     keywords=[
