@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='fvi',
-    version='1.1.6',
+    version='1.1.7',
     description="Combines grep/ack with vim to quickly find and edit files that contain a pattern",
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
