@@ -11,10 +11,14 @@ except ImportError:
     # manpage rather than try to recreate/update it.
     pass
 
+with open('README.rst') as f:
+    readme = f.read()
+    
 setup(
     name='fvi',
     version='1.1.7',
     description="Combines grep/ack with vim to quickly find and edit files that contain a pattern",
+    long_description=readme,
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
     url='http://nurdletech.com/linux-utilities/fvi',
