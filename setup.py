@@ -16,7 +16,7 @@ with open('README.rst') as f:
     
 setup(
     name='fvi',
-    version='1.1.7',
+    version='1.2.0',
     description="Combines grep/ack with vim to quickly find and edit files that contain a pattern",
     long_description=readme,
     author="Ken Kundert",
