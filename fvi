@@ -56,8 +56,14 @@ try:
     import codecs
     import os
 
+    # Globals {{{1
+    VIM = os.environ.get('VIM', 'vim')
+    GVIM = os.environ.get('GVIM', 'gvim')
+    GREP = os.environ.get('GREP', 'grep')
+    ACK = os.environ.get('ACK', 'ack')
+
     # Eliminate duplicate files {{{1
-    def eliminateDuplicateFiles(files):
+    def eliminate_duplicates(files):
         seen = set()
         todo = []
         ignore = []
@@ -111,7 +117,7 @@ try:
         vim_pattern_prefix += r'\m'
     else:
         vim_pattern_prefix += '\V'
-    editor = 'gvim' if cmdline['--gvim'] else 'vim'
+    editor = GVIM if cmdline['--gvim'] else VIM
 
     # Find files to edit {{{1
     if cmdline['<file>']:
@@ -140,7 +146,7 @@ try:
                 codicil('    ', err.object[begin:err.end+25])
                 codicil('    ', (2+err.start-begin)*' ' + (err.end-err.start)*'^')
         if use_grep:
-            cmd = ['grep'] + grep_flags + ['--regexp', pattern] + files
+            cmd = [GREP] + grep_flags + ['--regexp', pattern] + files
     else:
         # The user gave us no files to search, so use ack to find them
         ack_flags = [
@@ -149,8 +155,8 @@ try:
             if each not in ['--basic-regexp', '--extended-regexp']
         ]
         if set(ack_flags) != set(grep_flags):
-            warn("ack does not support the magic flags, ignored.")
-        cmd = ['ack', '--follow'] + ack_flags + [pattern]
+            warn("%s does not support the magic flags, ignored.", ACK)
+        cmd = [ACK, '--follow'] + ack_flags + [pattern]
 
     # Run either grep to filter out any files that do not contain the search
     # pattern or ack to find any files that contain the pattern.
@@ -168,7 +174,7 @@ try:
         terminate()
 
     # Edit the files {{{1
-    files = eliminateDuplicateFiles(files)
+    files = eliminate_duplicates(files)
     vim_options = 'set %s' % ' '.join(vim_flags)
     # Configure ctrl-N to move to first occurrence of search string in next file   
     # while suppressing the annoying 'press enter' message and echoing the

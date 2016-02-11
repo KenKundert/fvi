@@ -36,12 +36,30 @@ Installation
 Runs only on Unix systems.  Requires Python 3.5 or later.  It also requires 
 Python's docutils. Also uses ack if available. Install using::
 
-    pip install fvi
+   pip install fvi
 
 Installs both the program an its manpage. Once installed, you can get more 
 information using::
 
    man fvi
-    
-On Ubuntu, *ack* is installed with a non-standard name. You will need to modify 
-the *fvi* file and replace ``ack`` with ``ack-grep`` to address this issue.
+
+
+Configuration
+-------------
+You can use the VIM, GVIM, GREP, and ACK environment variables to control which 
+versions of these programs should be used. By default, VIM=vim, GVIM=gvim, 
+GREP=grep, and ACK=ack.  For example, if you wish to replace ack with The Silver 
+Searcher, add the following to your .bashrc file::
+
+   export ACK=ag
+
+On Ubuntu, *ack* is installed with a non-standard name, so you will want to 
+put::
+
+   export ACK=ack-grep
+
+into your ~/.bashrc file.
+
+If you wish to use the Silver Searcher to replace ack, use::
+. You will need to modify the *fvi* file and replace ``ack`` with ``ack-grep`` 
+to address this issue.
