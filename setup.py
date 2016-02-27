@@ -13,7 +13,7 @@ except ImportError:
 
 with open('README.rst') as f:
     readme = f.read()
-    
+
 setup(
     name='fvi',
     version='1.2.0',
