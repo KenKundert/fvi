@@ -18,6 +18,7 @@ Options:
                         regular expression
     -g, --gvim          open files in gvim rather than vim
     -b, --binary        do not skip binary files or those not cannot be decode as utf-8
+    -q, --quiet         suppress warnings about directories and binary files as utf-8
     -h, --help          show help message and exit
 
 Vim will open the first file that contains the pattern and place the cursor on
@@ -49,7 +50,7 @@ __version__ = '1.2.0'
 try:
     from docopt import docopt
     from inform import (
-        Inform, codicil, cull, display, fatal, os_error, terminate, warn
+        Inform, codicil, cull, display, fatal, os_error, plural, terminate, warn
     )
     from shlib import Run
     import re
@@ -84,6 +85,7 @@ try:
 
 # Read the command line {{{1
     cmdline = docopt(__doc__)
+    Inform(quiet=cmdline['--quiet'])
 
     # Initialization {{{1
     vim_flags = ['aw', 'nofen']  # enable autowrite and disable folds in vim
@@ -170,7 +172,12 @@ try:
 
     # Exit if there are no files {{{1
     if not cull(files):
-        display('None of the files searched contain the pattern.')
+        count = len(cmdline['<file>'])
+        display(
+            'None of the %s %s searched contain the pattern.' % (
+                count, plural(count, 'file')
+            )
+        )
         terminate()
 
     # Edit the files {{{1
