@@ -59,7 +59,3 @@ put::
    export ACK=ack-grep
 
 into your ~/.bashrc file.
-
-If you wish to use the Silver Searcher to replace ack, use::
-. You will need to modify the *fvi* file and replace ``ack`` with ``ack-grep`` 
-to address this issue.
