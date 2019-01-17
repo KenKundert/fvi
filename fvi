@@ -174,8 +174,8 @@ try:
     if not cull(files):
         count = len(cmdline['<file>'])
         display(
-            'None of the %s %s searched contain the pattern.' % (
-                count, plural(count, 'file')
+            'None of the {:# file/s} searched contain the pattern.'.format(
+                plural(count)
             )
         )
         terminate()
