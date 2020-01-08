@@ -1,6 +1,7 @@
 from distutils.core import setup
     # must use distutils rather than the newer setuptools because setuptools 
     # will not place the manpage where it belongs
+from codecs import open
 
 # Create/update manpage before installing
 try:
@@ -11,7 +12,7 @@ except ImportError:
     # manpage rather than try to recreate/update it.
     pass
 
-with open('README.rst') as f:
+with open('README.rst', encoding='utf-8') as f:
     readme = f.read()
 
 setup(
