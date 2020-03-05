@@ -18,7 +18,7 @@ Options:
                         regular expression
     -g, --gvim          open files in gvim rather than vim
     -b, --binary        do not skip binary files or those not cannot be decode as utf-8
-    -q, --quiet         suppress warnings about directories and binary files as utf-8
+    -w, --warn          do not suppress warnings about directories and binary files
     -h, --help          show help message and exit
 
 Vim will open the first file that contains the pattern and place the cursor on
@@ -85,7 +85,7 @@ try:
 
 # Read the command line {{{1
     cmdline = docopt(__doc__)
-    Inform(quiet=cmdline['--quiet'])
+    Inform(quiet=not cmdline['--warn'])
 
     # Initialization {{{1
     vim_flags = ['aw', 'nofen']  # enable autowrite and disable folds in vim
