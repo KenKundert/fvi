@@ -1,6 +1,10 @@
 FVI -- Vim paired with Grep
 ===========================
 
+:Author: Ken Kundert
+:Version: 1.2.1
+:Released: 2020-04-15
+
 Given a pattern and a list of files, **fvi** first runs *grep* on the given 
 files to find which contain the pattern, and then opens only those files in 
 *vim*. Within *vim* use *n* to move to next occurrence of pattern and *Ctrl-n* 

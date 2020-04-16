@@ -24,7 +24,7 @@ from textwrap import dedent
 
 # Program version {{{1
 version = '1.2.1'
-date = '17 January 2016'
+date = '2020-04-15'
 
 # Program Manpage {{{1
 programManpage = {

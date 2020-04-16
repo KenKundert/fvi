@@ -28,6 +28,7 @@ automatically written out before moving to the next file. Run 'man fvi' for more
 information.
 """
 __version__ = '1.2.1'
+__released__ = '2020-04-15'
 
 # License {{{1
 # Copyright (C) 2013-16 Kenneth S. Kundert
