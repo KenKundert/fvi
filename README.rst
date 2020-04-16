@@ -2,7 +2,7 @@ FVI -- Vim paired with Grep
 ===========================
 
 :Author: Ken Kundert
-:Version: 1.2.1
+:Version: 1.2.2
 :Released: 2020-04-15
 
 Given a pattern and a list of files, **fvi** first runs *grep* on the given 
