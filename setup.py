@@ -20,6 +20,7 @@ setup(
     version='1.2.2',
     description="Combines grep/ack with vim to quickly find and edit files that contain a pattern",
     long_description=readme,
+    long_description_content_type = 'text/x-rst',
     author="Ken Kundert",
     author_email='fvi@nurdletech.com',
     url='http://nurdletech.com/linux-utilities/fvi',
@@ -48,6 +49,8 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Utilities',
     ],
 )
