@@ -51,12 +51,14 @@ __released__ = '2020-04-16'
 try:
     from docopt import docopt
     from inform import (
-        Inform, codicil, cull, display, fatal, os_error, plural, terminate, warn
+        Inform, Error,
+        codicil, cull, display, os_error, plural, terminate, warn
     )
-    from shlib import Run
+    from shlib import Run, set_prefs
     import re
     import codecs
     import os
+    set_prefs(use_inform=True)
 
     # Globals {{{1
     VIM = os.environ.get('VIM', 'vim')
@@ -77,8 +79,8 @@ try:
                 else:
                     seen.add(nfo.st_ino)
                     todo.append(fn)
-            except OSError as err:
-                warn(os_error(err), 'Skipping ...')
+            except OSError as e:
+                warn(os_error(e), 'Skipping ...')
                 ignore.append(fn)
         if ignore:
             display('Ignoring duplicate files:\n    %s' %  '\n    '.join(ignore))
@@ -108,8 +110,11 @@ try:
         vim_pattern_suffix = ''
     if cmdline['--ignore-case']:
         grep_flags += ['--ignore-case']
+        ack_case_sensitivity = '--case-insensitive'
         re_flags += re.IGNORECASE
         vim_pattern_prefix += r'\c'
+    else:
+        ack_case_sensitivity = '--case-sensitive'
     if cmdline['--very-magic']:
         use_grep = True
         grep_flags += ['--extended-regexp']
@@ -140,14 +145,14 @@ try:
                     contents = f.read()
                     if use_grep or regex.search(contents, re_flags):
                         files += [each]
-            except OSError as err:
-                warn(os_error(err), 'Skipping ...')
-            except UnicodeDecodeError as err:
+            except OSError as e:
+                warn(os_error(e), 'Skipping ...')
+            except UnicodeDecodeError as e:
                 warn("is a binary file, skipping ...", culprit=each)
-                codicil(str(err))
-                begin = max(err.start-25, 0)
-                codicil('    ', err.object[begin:err.end+25])
-                codicil('    ', (2+err.start-begin)*' ' + (err.end-err.start)*'^')
+                codicil(str(e))
+                begin = max(e.start-25, 0)
+                codicil('    ', e.object[begin:e.end+25])
+                codicil('    ', (2+e.start-begin)*' ' + (e.end-e.start)*'^')
         if use_grep:
             cmd = [GREP] + grep_flags + ['--regexp', pattern] + files
     else:
@@ -159,17 +164,17 @@ try:
         ]
         if set(ack_flags) != set(grep_flags):
             warn("%s does not support the magic flags, ignored.", ACK)
-        cmd = [ACK, '--follow'] + ack_flags + [pattern]
+        cmd = [ACK, '--follow', ack_case_sensitivity] + ack_flags + [pattern]
 
     # Run either grep to filter out any files that do not contain the search
     # pattern or ack to find any files that contain the pattern.
     if cmd:
         try:
-            process = Run(cmd, modes='sOeW1')
+            process = Run(cmd, modes='sOEW1')
             files = process.stdout.strip().split('\n')
 
-        except OSError as err:
-            fatal(os_error(err))
+        except Error as e:
+            e.terminate()
 
     # Exit if there are no files {{{1
     if not cull(files):
@@ -196,13 +201,13 @@ try:
         + ['+%s' % '|'.join([vim_options, next_file_map, search_pattern])]
         + files
     )
-    vim = Run(cmd, modes='soeW*')
+    vim = Run(cmd, modes='soEW*')
     terminate(vim.status)
 
 except KeyboardInterrupt:
     display('Killed by user.')
     terminate(0)
-except OSError as err:
-    fatal(os_error(err))
+except Error as e:
+    e.terminate()
 
 # vim: set sw=4 sts=4 et:
