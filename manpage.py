@@ -47,9 +47,11 @@ programManpage = {
         .. :Copyright: public domain
         .. :Manual group: Utilities
 
+
         SYNOPSIS
         ========
         **fvi** [*options*] pattern [*files*]
+
 
         OPTIONS
         =======
@@ -68,10 +70,12 @@ programManpage = {
 
         -g, --gvim          open files in gvim rather than vim
 
+
         DESCRIPTION
         ===========
         **fvi** searches for files that contain a pattern and then open them in 
         *vim* or *gvim*.
+
 
         BASIC USE
         ---------
@@ -136,7 +140,9 @@ programManpage = {
         find the files. By default *ack* searches all regular non-binary file in 
         the current working directory and all its subdirectories, however you 
         can use .ackrc files to control this behavior (run 'man ack' for more 
-        information).
+        information). *ag*, i.e. The Silver Searcher, is a suitable alternative 
+        for *ack*.
+
 
         ADVANCED USE
         ------------
@@ -208,14 +214,15 @@ programManpage = {
         expressions. The compatibility between these two types of regular 
         expressions is rough. I recommend that in this situation, you use Perl 
         regular expressions as the pattern given on the **fvi** command line.  
-        Then when the files are opened in *vim* you may find that *vm* has 
+        Then when the files are opened in *vim* you may find that *vim* has 
         trouble finding the pattern. At this point you should simply type ``/`` 
         and then re-enter the search pattern, but this time in a *vim* 
         compatible manner.
 
+
         SEE ALSO
         ========
-        vim(3), grep(3), ack(3)
+        vim(1), grep(1), ack(1), ag(1)
     }"""
 }
 
