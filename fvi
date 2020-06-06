@@ -111,6 +111,8 @@ try:
     if cmdline['--ignore-case']:
         grep_flags += ['--ignore-case']
         ack_case_sensitivity = '--case-insensitive'
+        ack_case_sensitivity = '--ignore-case'
+            # ag uses --ignore-case like grep rather than --case-insensitive like ack
         re_flags += re.IGNORECASE
         vim_pattern_prefix += r'\c'
     else:
