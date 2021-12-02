@@ -1,6 +1,7 @@
-from distutils.core import setup
+#from distutils.core import setup
     # must use distutils rather than the newer setuptools because setuptools 
     # will not place the manpage where it belongs
+from setuptools import setup
 from codecs import open
 
 # Create/update manpage before installing
