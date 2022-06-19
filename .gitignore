@@ -4,6 +4,7 @@ install.out
 fvi.1
 fvi.1.rst
 MANIFEST
+.bump.cfg.nt
 
 # Packages
 *.egg

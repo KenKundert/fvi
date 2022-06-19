@@ -38,7 +38,9 @@ Installation
 ------------
 
 Runs only on Unix systems.  Requires Python 3.5 or later.  It also requires 
-Python's docutils. Also uses ack if available. Install using::
+Python's docutils. Also uses ack if available.
+
+Install using::
 
    pip install fvi
 
@@ -50,20 +52,20 @@ information using::
 
 Configuration
 -------------
-You can use the VIM, GVIM, GREP, and ACK environment variables to control which 
-versions of these programs should be used. By default, VIM=vim, GVIM=gvim, 
-GREP=grep, and ACK=ack.  For example, if you wish to replace ack with The Silver 
-Searcher, add the following to your .bashrc file::
+The file ~/.config/fvi/settings.nt is read if it exists.  This is a NestedText_
+file that can contain four settings: *vim*, *gvim*, *grep*, and *ack*.  These 
+contain the commands used to invoke vim, gvim, grep, and ack.  For example::
 
-   export ACK=ag
+    vim: vimx
+    gvim: gvim
+    grep: grep
+    ack: ag
 
-On Ubuntu, *ack* is installed with a non-standard name, so you will want to 
-put::
+These are actually the default values.  vimx is used rather than vim so that 
+copy and paste using the X11 works as expected and The Silver Searcher, ag, is 
+used rather than ack.  On Ubuntu, *ack* is installed with a non-standard name, 
+so if you want to use ack use::
 
-   export ACK=ack-grep
+   ack: ack-grep
 
-into your ~/.bashrc file.
-
-If you wish to use the Silver Searcher to replace ack, use::
-. You will need to modify the *fvi* file and replace ``ack`` with ``ack-grep`` 
-to address this issue.
+.. _NestedText: https://nestedtext.org

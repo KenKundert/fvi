@@ -33,5 +33,9 @@ if [[ $? -ne 0 ]] ; then
     exit 1
 fi
 
+echo "installing manpage"
+rm ~/.local/man/man1/fvi.1
+cp fvi.1 ~/.local/man/man1/
+
 # remove build directories, because I like a clean directory
 rm -rf build dist $cmd.egg-info

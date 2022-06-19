@@ -27,6 +27,9 @@ the first occurrence. Use n to go to the next occurrence and ctrl-n to go to the
 next file. Autowrite is set by default, so any changes you make are
 automatically written out before moving to the next file. Run 'man fvi' for more
 information.
+
+~/.config/fvi/settings.nt is read if it exists and can be used the change the 
+programs used for vim, gvim, grep, and ack.
 """
 __version__ = '1.4.0'
 __released__ = '2021-11-10'
@@ -48,27 +51,24 @@ __released__ = '2021-11-10'
 # this program.  If not, see http://www.gnu.org/licenses/.
 
 
-# Imports {{{1
 try:
+    # Imports {{{1
+    from appdirs import user_config_dir
     from docopt import docopt
     from fnmatch import fnmatch
     from inform import (
         Inform, Error,
         codicil, cull, display, os_error, plural, terminate, warn
     )
-    from shlib import Run, set_prefs
+    from shlib import Run, set_prefs, to_path
+    import nestedtext as nt
     import codecs
     import re
     import os
     set_prefs(use_inform=True)
 
-    # Globals {{{1
-    VIM = os.environ.get('VIM', 'vim')
-    GVIM = os.environ.get('GVIM', 'gvim')
-    GREP = os.environ.get('GREP', 'grep')
-    ACK = os.environ.get('ACK', 'ack')
-
-    # Eliminate duplicate files {{{1
+    # Utilities {{{1
+    # eliminate duplicate files {{{2
     def eliminate_duplicates(files):
         seen = set()
         todo = []
@@ -88,7 +88,23 @@ try:
             display('Ignoring duplicate files:\n    %s' %  '\n    '.join(ignore))
         return todo
 
-# Read the command line {{{1
+    # Read the settings {{{1
+    settings_file = to_path(user_config_dir("fvi"), "settings.nt")
+    settings = {}
+    try:
+        settings = nt.load(settings_file, 'dict')
+    except FileNotFoundError:
+        pass
+    except nt.NestedTextError as e:
+        e.report()
+    except OSError as e:
+        warn(os_error(e))
+    vim = settings.get('vim', 'vimx').split()
+    gvim = settings.get('gvim', 'gvim').split()
+    grep = settings.get('grep', 'grep').split()
+    ack = settings.get('ack', 'ag').split()
+
+    # Read the command line {{{1
     cmdline = docopt(__doc__)
     Inform(quiet=not cmdline['--warn'])
 
@@ -129,7 +145,7 @@ try:
         vim_pattern_prefix += r'\m'
     else:
         vim_pattern_prefix += '\V'
-    editor = GVIM if cmdline['--gvim'] else VIM
+    editor = gvim if cmdline['--gvim'] else vim
     exclude = cmdline['--exclude']
 
     # Find files to edit {{{1
@@ -159,7 +175,7 @@ try:
                 codicil('    ', e.object[begin:e.end+25])
                 codicil('    ', (2+e.start-begin)*' ' + (e.end-e.start)*'^')
         if use_grep:
-            cmd = [GREP] + grep_flags + ['--regexp', pattern] + files
+            cmd = grep + grep_flags + ['--regexp', pattern] + files
     else:
         # The user gave us no files to search, so use ack to find them
         ack_flags = [
@@ -168,8 +184,8 @@ try:
             if each not in ['--basic-regexp', '--extended-regexp']
         ]
         if set(ack_flags) != set(grep_flags):
-            warn("%s does not support the magic flags, ignored.", ACK)
-        cmd = [ACK, '--follow', ack_case_sensitivity] + ack_flags + [pattern]
+            warn("%s does not support the magic flags, ignored.", ' '.join(ack))
+        cmd = ack + ['--follow', ack_case_sensitivity] + ack_flags + [pattern]
 
     # Run either grep to filter out any files that do not contain the search
     # pattern or ack to find any files that contain the pattern.
@@ -210,7 +226,7 @@ try:
         vim_pattern_prefix + pattern + vim_pattern_suffix
     )
     cmd = (
-        [editor]
+        editor
         + ['+%s' % '|'.join([vim_options, next_file_map, search_pattern])]
         + files
     )

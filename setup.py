@@ -35,6 +35,7 @@ setup(
         'docopt',
         'docutils',
         'inform (>=1.15)',
+        'nestedtext',
         'shlib',
     ],
     zip_safe = True,
@@ -53,6 +54,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Utilities',
     ],
 )
