@@ -31,8 +31,8 @@ information.
 ~/.config/fvi/settings.nt is read if it exists and can be used the change the 
 programs used for vim, gvim, grep, and ack.
 """
-__version__ = '1.4.1'
-__released__ = '2022-06-19'
+__version__ = '1.4.2'
+__released__ = '2022-06-22'
 
 # License {{{1
 # Copyright (C) 2013-2022 Kenneth S. Kundert

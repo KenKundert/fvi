@@ -23,8 +23,8 @@ from docutils.writers import manpage
 from textwrap import dedent
 
 # Program version {{{1
-version = '1.4.1'
-date = '2022-06-19'
+version = '1.4.2'
+date = '2022-06-22'
 
 # Program Manpage {{{1
 programManpage = {
