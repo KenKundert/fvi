@@ -99,10 +99,10 @@ try:
         e.report()
     except OSError as e:
         warn(os_error(e))
-    vim = settings.get('vim', 'vimx').split()
+    vim = settings.get('vim', 'vim').split()
     gvim = settings.get('gvim', 'gvim').split()
     grep = settings.get('grep', 'grep').split()
-    ack = settings.get('ack', 'ag').split()
+    ack = settings.get('ack', '').split()
 
     # Read the command line {{{1
     cmdline = docopt(__doc__)
@@ -128,9 +128,11 @@ try:
         vim_pattern_suffix = ''
     if cmdline['--ignore-case']:
         grep_flags += ['--ignore-case']
-        ack_case_sensitivity = '--case-insensitive'
-        ack_case_sensitivity = '--ignore-case'
-            # ag uses --ignore-case like grep rather than --case-insensitive like ack
+        # ag uses --ignore-case like grep rather than --case-insensitive like ack
+        if ack == 'ag':
+            ack_case_sensitivity = '--ignore-case'
+        else:
+            ack_case_sensitivity = '--case-insensitive'
         re_flags += re.IGNORECASE
         vim_pattern_prefix += r'\c'
     else:
@@ -178,6 +180,9 @@ try:
             cmd = grep + grep_flags + ['--regexp', pattern] + files
     else:
         # The user gave us no files to search, so use ack to find them
+        if not ack:
+            raise Error('ack is not available, so you must specify files to search.')
+
         ack_flags = [
             each
             for each in grep_flags

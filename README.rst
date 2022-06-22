@@ -61,10 +61,9 @@ contain the commands used to invoke vim, gvim, grep, and ack.  For example::
     grep: grep
     ack: ag
 
-These are actually the default values.  vimx is used rather than vim so that 
-copy and paste using the X11 works as expected and The Silver Searcher, ag, is 
-used rather than ack.  On Ubuntu, *ack* is installed with a non-standard name, 
-so if you want to use ack use::
+vimx is used rather than vim so that copy and paste using the X11 works as 
+expected and The Silver Searcher, ag, is used rather than ack.  On Ubuntu, *ack* 
+is installed with a non-standard name, so if you want to use ack use::
 
    ack: ack-grep
 
