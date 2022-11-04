@@ -1,5 +1,5 @@
-FVI -- Vim paired with Grep
-===========================
+FVI — Vim paired with Grep
+==========================
 
 :Author: Ken Kundert
 :Version: 1.4.2

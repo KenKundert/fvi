@@ -29,10 +29,12 @@ automatically written out before moving to the next file. Run 'man fvi' for more
 information.
 
 ~/.config/fvi/settings.nt is read if it exists and can be used the change the 
-programs used for vim, gvim, grep, and ack.
+programs used for vim, gvim, grep, and ag.
 """
 __version__ = '1.4.2'
 __released__ = '2022-06-22'
+version = f"{__version__} ({__released__})"
+
 
 # License {{{1
 # Copyright (C) 2013-2022 Kenneth S. Kundert
@@ -57,8 +59,7 @@ try:
     from docopt import docopt
     from fnmatch import fnmatch
     from inform import (
-        Inform, Error,
-        codicil, cull, display, os_error, plural, terminate, warn
+        Error, codicil, cull, display, os_error, plural, terminate, warn
     )
     from shlib import Run, set_prefs, to_path
     import nestedtext as nt
@@ -102,11 +103,11 @@ try:
     vim = settings.get('vim', 'vim').split()
     gvim = settings.get('gvim', 'gvim').split()
     grep = settings.get('grep', 'grep').split()
-    ack = settings.get('ack', '').split()
+    ag = settings.get('ag', '').split()
 
     # Read the command line {{{1
-    cmdline = docopt(__doc__)
-    Inform(quiet=not cmdline['--warn'])
+    cmdline = docopt(__doc__, version=version)
+    warn.output = cmdline['--warn']
 
     # Initialization {{{1
     vim_flags = ['aw', 'nofen']  # enable autowrite and disable folds in vim
@@ -128,15 +129,11 @@ try:
         vim_pattern_suffix = ''
     if cmdline['--ignore-case']:
         grep_flags += ['--ignore-case']
-        # ag uses --ignore-case like grep rather than --case-insensitive like ack
-        if ack == 'ag':
-            ack_case_sensitivity = '--ignore-case'
-        else:
-            ack_case_sensitivity = '--case-insensitive'
+        ag_case_sensitivity = '--ignore-case'
         re_flags += re.IGNORECASE
         vim_pattern_prefix += r'\c'
     else:
-        ack_case_sensitivity = '--case-sensitive'
+        ag_case_sensitivity = '--case-sensitive'
     if cmdline['--very-magic']:
         use_grep = True
         grep_flags += ['--extended-regexp']
@@ -179,25 +176,25 @@ try:
         if use_grep:
             cmd = grep + grep_flags + ['--regexp', pattern] + files
     else:
-        # The user gave us no files to search, so use ack to find them
-        if not ack:
-            raise Error('ack is not available, so you must specify files to search.')
+        # The user gave us no files to search, so use ag to find them
+        if not ag:
+            raise Error('ag is not available, so you must specify files to search.')
 
-        ack_flags = [
+        ag_flags = [
             each
             for each in grep_flags
             if each not in ['--basic-regexp', '--extended-regexp']
         ]
-        if set(ack_flags) != set(grep_flags):
-            warn("%s does not support the magic flags, ignored.", ' '.join(ack))
-        cmd = ack + ['--follow', ack_case_sensitivity] + ack_flags + [pattern]
+        if set(ag_flags) != set(grep_flags):
+            warn(f"{ag[0]} does not support the magic flags, ignored.")
+        cmd = ag + ['--follow', ag_case_sensitivity] + ag_flags + [pattern]
 
     # Run either grep to filter out any files that do not contain the search
-    # pattern or ack to find any files that contain the pattern.
+    # pattern or ag to find any files that contain the pattern.
     if cmd:
         try:
-            process = Run(cmd, modes='sOEW1')
-            files = process.stdout.strip().split('\n')
+            searcher = Run(cmd, modes='sOEW1')
+            files = searcher.stdout.strip().split('\n')
 
         except Error as e:
             e.terminate()
@@ -222,6 +219,7 @@ try:
 
     # Edit the files {{{1
     files = eliminate_duplicates(files)
+    assert files
     vim_options = 'set %s' % ' '.join(vim_flags)
     # Configure ctrl-N to move to first occurrence of search string in next file   
     # while suppressing the annoying 'press enter' message and echoing the
