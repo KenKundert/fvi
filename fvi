@@ -13,12 +13,13 @@ Options:
     -e, --exclude [glob]  a glob string used to filter out unwanted files.
     -w, --word            match a word
     -i, --ignore-case     ignore case
+    -l, --literal         search pattern is a literal string rather than a regex
     -m, --magic           treat a pattern as a vim magic or grep basic regular
                           expression
     -v, --very-magic      treat a pattern as a vim very magic or grep extended
                           regular expression
     -g, --gvim            open files in gvim rather than vim
-    -b, --binary          do not skip binary files or those not cannot be decode as utf-8
+    -b, --binary          do not skip binary files (those that cannot be decoded as utf-8)
     -W, --warn            do not suppress warnings about directories and binary files
     -h, --help            show help message and exit
 
@@ -31,8 +32,8 @@ information.
 ~/.config/fvi/settings.nt is read if it exists and can be used the change the 
 programs used for vim, gvim, grep, and ag.
 """
-__version__ = '1.4.3'
-__released__ = '2023-01-06'
+__version__ = '1.4.2'
+__released__ = '2022-06-22'
 version = f"{__version__} ({__released__})"
 
 
@@ -142,6 +143,10 @@ try:
         use_grep = True
         grep_flags += ['--basic-regexp']
         vim_pattern_prefix += r'\m'
+    elif cmdline['--literal']:
+        use_grep = True
+        grep_flags += ['--fixed-string']
+        vim_pattern_prefix += r'\M'
     else:
         vim_pattern_prefix += '\V'
     editor = gvim if cmdline['--gvim'] else vim
