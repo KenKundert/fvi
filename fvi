@@ -32,8 +32,8 @@ information.
 ~/.config/fvi/settings.nt is read if it exists and can be used the change the 
 programs used for vim, gvim, grep, and ag.
 """
-__version__ = '1.4.2'
-__released__ = '2022-06-22'
+__version__ = '1.4.4'
+__released__ = '2023-01-06'
 version = f"{__version__} ({__released__})"
 
 
