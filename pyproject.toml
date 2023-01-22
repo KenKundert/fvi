@@ -1,0 +1,40 @@
+[project]
+name = "fvi"
+version = "1.4.4"
+description = "Open those files that contain a string in Vim"
+readme = "README.rst"
+keywords = ["grep", "vi", "vim", "gvim"]
+authors = [
+    {name = "Ken Kundert"},
+    {email = "fvi@nurdletech.com"}
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.6"
+dependencies = [
+    "appdirs",
+    "docopt",
+    "inform",
+    "nestedtext",
+    "shlib",
+]
+
+[project.scripts]
+fvi = "fvi.main:main"
+
+[project.urls]
+homepage = "https://github.com/kenkundert/fvi"
+documentation = "https://github.com/KenKundert/fvi/blob/master/doc/README.rst"
+repository = "https://github.com/kenkundert/fvi"
+changelog = "https://github.com/KenKundert/fvi/blob/master/doc/CHANGELOG.rst"
+
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"

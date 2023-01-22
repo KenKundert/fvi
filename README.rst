@@ -5,66 +5,59 @@ FVI — Vim paired with Grep
 :Version: 1.4.4
 :Released: 2023-01-06
 
-Given a pattern and a list of files, **fvi** first runs *grep* on the given 
-files to find which contain the pattern, and then opens only those files in 
-*vim*. Within *vim* use *n* to move to next occurrence of pattern and *Ctrl-n* 
-to move to next file. *vim* is run with *autowrite* set. Any directories, 
-unreadable files, or binary files in the file list are ignored.
+Opens files that contains a given pattern in *vim*.  You may specify 
+a collection of files to search, otherwise all files in the current working 
+directory and all sub directories are searched.
 
-If no file list is given on the command line, **fvi** then uses *ack* rather 
-than *grep* to find which files contain the pattern. Generally *ack* will look 
-at all regular files in the current working directory and all subdirectories, 
-however this can be controlled using .ackrc files.
+Within *vim* use *n* to move to next occurrence of pattern. *Ctrl-n* moves to 
+next file and *ctrl-p* moves to the previous file.  *vim* is run with 
+*autowrite* set.  Any directories, unreadable files, or binary files in the file 
+list are ignored.
+
 
 Arguments
 ---------
 
-``fvi`` [options] *pattern* [*file* [ *file* ... ]]
+``fvi`` [options] *pattern* [*file* ... ]
 
 Options
 -------
 
--h, --help         Show this help message and exit.
--w, --word         Match a word.
--i, --ignore-case  Ignore case.
--m, --magic        Treat pattern as a vim magic or grep basic regular
-                   expression.
--v, --very-magic   Treat pattern as a vim very magic or grep extended
-                   regular expression.
--g, --gvim         Open files in gvim.
+-i, --ignore-case     ignore case
+-w, --word            match a word
+-e, --exclude [glob]  a glob string used to filter out unwanted files
+                      can use brace expansion to specify multiple globs
+-H, --hidden          include hidden files
+-b, --binary          do not skip binary files (any not encoded in utf-8)
+-g, --gvim            open files in gvim rather than vim
+-v, --vim             open files in vim rather than gvim
+-W, --warn            do not suppress warnings about directories and binary files
+-h, --help            show help message and exit
 
 
 Installation
 ------------
 
-Runs only on Unix systems.  Requires Python 3.5 or later.  It also requires 
-Python's docutils. Also uses ack if available.
+Runs only on Unix systems.  Requires Python 3.6 or later.
 
 Install using::
 
    pip install fvi
 
-Installs both the program an its manpage. Once installed, you can get more 
-information using::
-
-   man fvi
-
 
 Configuration
 -------------
+
 The file ~/.config/fvi/settings.nt is read if it exists.  This is a NestedText_
-file that can contain four settings: *vim*, *gvim*, *grep*, and *ack*.  These 
-contain the commands used to invoke vim, gvim, grep, and ack.  For example::
+file that can contain settings: *vim*, *gvim*, and *gui*.  The first specify the 
+commands used to invoke *vim* and *gvim*.  The last is a Boolean that indicates 
+whether *gvim* is used by default (use *yes* or *no*).  For example::
 
     vim: vimx
     gvim: gvim
-    grep: grep
-    ack: ag
+    gui: yes
 
-vimx is used rather than vim so that copy and paste using the X11 works as 
-expected and The Silver Searcher, ag, is used rather than ack.  On Ubuntu, *ack* 
-is installed with a non-standard name, so if you want to use ack use::
-
-   ack: ack-grep
+In this example, vimx is used rather than vim so that copy and paste using X11 
+works as expected.
 
 .. _NestedText: https://nestedtext.org
