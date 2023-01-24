@@ -7,7 +7,7 @@ Searches through a list of files to find a string, and then sequentially opens
 each file that contains that string in Vim.
 
 Usage:
-    fvi [options] <pattern> [<file>...]
+    fvi [options] [--] <pattern> [<file>...]
 
 Options:
     -i, --ignore-case     ignore case
@@ -27,6 +27,10 @@ next file and ctrl-p to go to the previous file. Autowrite is on by default,
 so any changes you make are automatically saved before moving to the next file.
 
 The pattern is a literal text string.  Regular expressions are not supported.
+
+Use -- to terminate the command line options.  Any thing that follows -- is
+treated as a pattern or filename.  You can search for patterns that start with
+- by preceding the pattern with --.
 """
 
 

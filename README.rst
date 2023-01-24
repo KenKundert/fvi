@@ -14,6 +14,7 @@ next file and *ctrl-p* moves to the previous file.  *vim* is run with
 *autowrite* set.  Any directories, unreadable files, or binary files in the file 
 list are ignored.
 
+The pattern is a literal text string.  Regular expressions are not supported.
 
 Arguments
 ---------
@@ -33,6 +34,11 @@ Options
 -v, --vim             open files in vim rather than gvim
 -W, --warn            do not suppress warnings about directories and binary files
 -h, --help            show help message and exit
+--                    terminates the command line options
+
+Use -- to terminate the command line options.  Any thing that follows -- is
+treated as a pattern or filename.  You can search for patterns that start with
+- by preceding the pattern with --.
 
 
 Installation
