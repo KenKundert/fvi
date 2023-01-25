@@ -16,17 +16,19 @@ list are ignored.
 
 The pattern is a literal text string.  Regular expressions are not supported.
 
+
 Arguments
 ---------
 
-``fvi`` [options] *pattern* [*file* ... ]
+``fvi`` [options] [--] *pattern* [*file* ... ]
+
 
 Options
 -------
 
 -i, --ignore-case     ignore case
 -w, --word            match a word
--e, --exclude [glob]  a glob string used to filter out unwanted files
+-e, --exclude <glob>  a glob string used to filter out unwanted files,
                       can use brace expansion to specify multiple globs
 -H, --hidden          include hidden files
 -b, --binary          do not skip binary files (any not encoded in utf-8)
@@ -34,11 +36,10 @@ Options
 -v, --vim             open files in vim rather than gvim
 -W, --warn            do not suppress warnings about directories and binary files
 -h, --help            show help message and exit
---                    terminates the command line options
 
-Use -- to terminate the command line options.  Any thing that follows -- is
-treated as a pattern or filename.  You can search for patterns that start with
-- by preceding the pattern with --.
+Use -- to terminate the command line options.
+Any thing that follows -- is treated as a pattern or filename.
+You can search for patterns that start with - by preceding the pattern with --.
 
 
 Installation
