@@ -70,8 +70,8 @@ DEFAULT_VIM = "vim"
 DEFAULT_GVIM = "gvim"
 
 # do not change these
-__version__ = '2.0a1'
-__released__ = '2023-01-22'
+__version__ = '2.0'
+__released__ = '2023-01-24'
 version = f"{__version__} ({__released__})"
 set_prefs(use_inform=True)
 

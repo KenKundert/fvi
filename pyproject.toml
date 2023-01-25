@@ -1,6 +1,6 @@
 [project]
 name = "fvi"
-version = "2.0a1"
+version = "2.0"
 description = "Open those files that contain a string in Vim"
 readme = "README.rst"
 keywords = ["grep", "vi", "vim", "gvim"]
