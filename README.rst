@@ -16,6 +16,10 @@ list are ignored.
 
 The pattern is a literal text string.  Regular expressions are not supported.
 
+Use -- to terminate the command line options.
+Any thing that follows -- is treated as the pattern.
+You can search for patterns that start with - by preceding the pattern with --.
+
 
 Arguments
 ---------
@@ -36,10 +40,6 @@ Options
 -v, --vim             open files in vim rather than gvim
 -W, --warn            do not suppress warnings about directories and binary files
 -h, --help            show help message and exit
-
-Use -- to terminate the command line options.
-Any thing that follows -- is treated as a pattern or filename.
-You can search for patterns that start with - by preceding the pattern with --.
 
 
 Installation
