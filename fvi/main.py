@@ -12,10 +12,12 @@ Usage:
 Options:
     -i, --ignore-case     ignore case
     -w, --word            match a word
-    -e, --exclude <glob>  a glob string used to filter out unwanted files
+    -o, --only <glob>     a glob string used to specify desired files,
+                          can use brace expansion to specify multiple globs
+    -e, --exclude <glob>  a glob string used to filter out unwanted files,
                           can use brace expansion to specify multiple globs
     -H, --hidden          include hidden files
-    -b, --binary          do not skip binary files (any not encoded in utf-8)
+    -b, --binary          do not skip binary files (any not encoded in ascii or utf-8)
     -g, --gvim            open files in gvim rather than vim
     -v, --vim             open files in vim rather than gvim
     -W, --warn            do not suppress warnings about directories and binary files
@@ -157,12 +159,24 @@ def main():
             useGUI = True
         editor = gvim if useGUI else vim
 
+        # --only {{{3
+        if cmdline['--only']:
+            globs = list(brace_expand(cmdline['--only']))
+            def acceptable(path):
+                for glob in globs:
+                    if fnmatch(path.name, glob):
+                        return True
+
+        else:
+            def acceptable(path):
+                return True
+
         # --exclude {{{3
         if cmdline['--exclude']:
-            excludes = list(brace_expand(cmdline['--exclude']))
+            globs = list(brace_expand(cmdline['--exclude']))
             def exclude(path):
-                for exclude in excludes:
-                    if fnmatch(path.name, exclude):
+                for glob in globs:
+                    if fnmatch(path.name, glob):
                         return True
         else:
             def exclude(path):
@@ -174,6 +188,7 @@ def main():
 
         # Eliminate undesirable files {{{2
         #     those that do not contain the pattern,
+        #     those don’t match only glob,
         #     those that match exclude glob, or
         #     directories and unreadable or binary files
         filtered_files = set()
@@ -182,7 +197,7 @@ def main():
         for path in files:
             if is_str(path):
                 path = to_path(path)
-            if exclude(path):
+            if exclude(path) or not acceptable(path):
                 continue
             try:
                 with codecs.open(path, 'r', 'utf-8', err_handler) as f:
@@ -198,10 +213,10 @@ def main():
                 begin = max(e.start-25, 0)
                 codicil('    ', e.object[begin:e.end+25])
                 codicil('    ', (2+e.start-begin)*' ' + (e.end-e.start)*'^')
-        files = sorted(filtered_files)
+        files = sorted(cull(filtered_files))
 
         # Exit if there are no files {{{2
-        if not cull(files):
+        if not files:
             display("Pattern not found.")
             terminate()
 

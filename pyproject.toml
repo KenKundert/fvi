@@ -31,9 +31,9 @@ fvi = "fvi.main:main"
 
 [project.urls]
 homepage = "https://github.com/kenkundert/fvi"
-documentation = "https://github.com/KenKundert/fvi/blob/master/doc/README.rst"
+documentation = "https://github.com/KenKundert/fvi/blob/master/README.rst"
 repository = "https://github.com/kenkundert/fvi"
-changelog = "https://github.com/KenKundert/fvi/blob/master/doc/CHANGELOG.rst"
+changelog = "https://github.com/KenKundert/fvi/blob/master/CHANGELOG.rst"
 
 [build-system]
 requires = ["flit_core >=2,<4"]

@@ -32,14 +32,30 @@ Options
 
 -i, --ignore-case     ignore case
 -w, --word            match a word
+-o, --only <glob>     a glob string used to specify desired files,
+                      can use brace expansion to specify multiple globs
 -e, --exclude <glob>  a glob string used to filter out unwanted files,
                       can use brace expansion to specify multiple globs
 -H, --hidden          include hidden files
--b, --binary          do not skip binary files (any not encoded in utf-8)
+-b, --binary          do not skip binary files (any not encoded in ascii or utf-8)
 -g, --gvim            open files in gvim rather than vim
 -v, --vim             open files in vim rather than gvim
 -W, --warn            do not suppress warnings about directories and binary files
 -h, --help            show help message and exit
+
+If both ``--only`` and ``--exclude`` are specified, both must be satisfied.
+
+
+Examples
+--------
+
+Search specified files:
+
+    fvi '#\!/usr/bin/env python3' ~/bin/*
+
+Search all files in current hierarchy:
+
+    fvi '/* unknown key */'
 
 
 Installation

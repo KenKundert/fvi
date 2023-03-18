@@ -9,7 +9,12 @@ Latest development version
 | Released: 2023-03-18
 
 
-v2.0 (2023-??-??)
+v2.1 (2023-03-18)
+-----------------
+- support slashes and backslashes in search strings
+
+
+v2.0 (2023-01-24)
 -----------------
 - search patterns are now literal strings; regular expressions are no longer 
   supported.
