@@ -96,6 +96,10 @@ def eliminate_duplicates(files):
         display('Ignoring duplicate files:\n    {}'.format('\n    '.join(ignore)))
     return todo
 
+def vim_escape(pattern):
+    return r'\V' + pattern.replace('\\', '\\\\').replace('/', '\\/')
+        # \V is 'very no magic' flag in Vim
+
 # MAIN {{{1
 def main():
     try:
@@ -126,13 +130,12 @@ def main():
         vim_flags = ['aw', 'nofen']  # enable autowrite and disable folds in vim
         re_flags = 0
         cmd = None
-        vim_pattern_prefix = r'\V'  # \V is 'very no magic' flag
-        vim_pattern_suffix = ''
 
         # Process the command line {{{2
         # <pattern> {{{3
         pattern = cmdline['<pattern>']
         re_pattern = re.escape(pattern)
+        vim_pattern = vim_escape(pattern)
 
         # <file> {{{3
         files = eliminate_duplicates(cmdline['<file>'])
@@ -140,13 +143,12 @@ def main():
         # --ignore-case {{{3
         if cmdline['--ignore-case']:
             re_flags += re.IGNORECASE
-            vim_pattern_prefix += r'\c'
+            vim_pattern = r'\c' + vim_pattern
 
         # --word {{{3
         if cmdline['--word']:
-            vim_pattern_prefix += r'\<'
-            vim_pattern_suffix += r'\>'
-            re_pattern = r'\b' + pattern + r'\b'
+            re_pattern = r'\b' + re_pattern + r'\b'
+            vim_pattern = r'\<' + vim_pattern + r'\>'
 
         # --vim and --gvim {{{3
         if cmdline['--vim']:
@@ -174,7 +176,7 @@ def main():
         #     those that do not contain the pattern,
         #     those that match exclude glob, or
         #     directories and unreadable or binary files
-        filtered_files = []
+        filtered_files = set()
         regex = re.compile(re_pattern, re_flags)
         err_handler = 'ignore' if cmdline['--binary'] else 'strict'
         for path in files:
@@ -186,7 +188,8 @@ def main():
                 with codecs.open(path, 'r', 'utf-8', err_handler) as f:
                     contents = f.read()
                     if regex.search(contents, re_flags):
-                        filtered_files += [path]
+                        filtered_files.add(path.resolve())
+                             # resolve path to eliminate duplicates due to symlinks
             except OSError as e:
                 warn(os_error(e), 'Skipping ...')
             except UnicodeDecodeError as e:
@@ -195,7 +198,7 @@ def main():
                 begin = max(e.start-25, 0)
                 codicil('    ', e.object[begin:e.end+25])
                 codicil('    ', (2+e.start-begin)*' ' + (e.end-e.start)*'^')
-        files = filtered_files
+        files = sorted(filtered_files)
 
         # Exit if there are no files {{{2
         if not cull(files):
@@ -210,7 +213,7 @@ def main():
         # name of the new file so you know where you are.
         next_file_map = 'map <C-N> :silent next +//<CR> :file<CR>'
         prev_file_map = 'map <C-P> :silent previous +//<CR> :file<CR>'
-        search_pattern = f"silent /{vim_pattern_prefix + pattern + vim_pattern_suffix}"
+        search_pattern = f"silent /{vim_pattern}"
         vim_cmds = [vim_options, next_file_map, prev_file_map, search_pattern]
         cmd = editor + ['+' + '|'.join(vim_cmds)] + files
         vim = Run(cmd, modes='soEW*')
