@@ -2,8 +2,8 @@ FVI — Vim paired with Grep
 ==========================
 
 :Author: Ken Kundert
-:Version: 2.0
-:Released: 2023-01-24
+:Version: 2.1
+:Released: 2023-03-18
 
 Opens files that contains a given pattern in *vim*.  You may specify 
 a collection of files to search, otherwise all files in the current working 
