@@ -55,7 +55,7 @@ Search specified files:
 
 Search all files in current hierarchy:
 
-    fvi '/* unknown key */'
+    fvi 'unknown key'
 
 
 Installation
