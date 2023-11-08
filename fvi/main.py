@@ -58,7 +58,7 @@ from appdirs import user_config_dir
 from docopt import docopt
 from fnmatch import fnmatch
 from inform import (
-    Error, codicil, cull, display, is_str, os_error, plural, terminate, warn
+    Error, codicil, cull, display, done, is_str, os_error, plural, terminate, warn
 )
 from shlib import Run, brace_expand, set_prefs, to_path, leaves
 import nestedtext as nt
@@ -96,6 +96,10 @@ def eliminate_duplicates(files):
             ignore.append(fn)
     if ignore:
         display('Ignoring duplicate files:\n    {}'.format('\n    '.join(ignore)))
+    if files and not todo:
+        # files were requested, but none remain, so exit
+        display("No files to search.")
+        done()
     return todo
 
 def vim_escape(pattern):
